@@ -1,12 +1,27 @@
+//! HTTP Bindings for Pwnboard!
+//! 
 use reqwest::{Client, Response};
 use serde_json::{json, value::Value};
 use std::error::Error;
 
+/// Struct for Pwnboard client
+/// 
+/// Allows for communicationi between application and API route
+/// 
+/// # Examples
+/// ```
+/// use pwnboard_rs::Pwnboard
+/// 
+/// fn main() {
+///     let pwn = Pwnboard::new("https://pwnboard.win").expect("Failed to create client");
+/// }
+/// ```
 pub struct Pwnboard {
-    uri: String,
+    pub uri: String,
     client: Client,
 }
 
+/// Defines Log Level for Log route
 #[derive(Debug)]
 pub enum LogLevel {
     Loot,
@@ -22,6 +37,7 @@ impl From<LogLevel> for Value {
 }
 
 impl Pwnboard {
+    /// Creates new Pwnboard client pointing to given URI
     pub fn new(uri: &str) -> Result<Pwnboard, Box<dyn Error>> {
         let client = Client::new();
         let uri = String::from(uri);
@@ -36,6 +52,7 @@ impl Pwnboard {
         }
     }
 
+    /// Indicates access to a box via given application
     pub async fn boxaccess(
         &self,
         ip: &str,
@@ -74,6 +91,7 @@ impl Pwnboard {
             .await?)
     }
 
+    /// Send credentials for box up to Pwnboard
     pub async fn credential(
         &self,
         ip: &str,
@@ -107,6 +125,7 @@ impl Pwnboard {
             .await?)
     }
 
+    /// Send log to pwnboard for given service
     pub async fn log(
         &self,
         ip: &str,
